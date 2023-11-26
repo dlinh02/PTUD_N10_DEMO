@@ -1,19 +1,22 @@
 <?php
-session_start();
-ob_start();
+    session_start();
+    ob_start();
 
-if (!isset($_SESSION['LoaiNhanVien']) || empty($_SESSION['LoaiNhanVien'])) {
-    header('location: ./admin/login.php');
-    exit();
-}
+    $_SESSION['role'] = 'admin';
 
-if (isset($_GET['action']) && $_GET['action'] == 'logout') {
-    session_unset();
-    session_destroy();
-    header('location: ./admin/login.php');
-    exit();
-}
-?>
+    if (!isset($_SESSION['LoaiNhanVien']) || empty($_SESSION['LoaiNhanVien'])) {
+        header('location: ./admin/login.php');
+        exit();
+    }
+
+    if (isset($_GET['action']) && $_GET['action'] == 'logout') {
+        session_unset();
+        session_destroy();
+        header('location: ./admin/login.php');
+        exit();
+    }
+    ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,10 +34,17 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        small {
+            color: red;
+        }
+    </style>
 </head>
 
 
+
 <body>
+
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12 header">
@@ -75,7 +85,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
             $p = new VEmployee();
 
             include_once("view/vProductAdmin.php");
-            $c = new VProduct();
+            $c = new VProductAdmin();
 
             include_once("view/vCustomerAdmin.php");
             $d = new VCustomer();
@@ -100,6 +110,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
                 $p->showFormEditEmployee();
             } elseif (isset($_REQUEST["btnCusAct"])) {
                 $d->showFormDelCustomer();
+            } elseif (isset($_REQUEST["thong-ke"])) {
+                include("./thongke.php");
             } else {
                 echo "<img class='img-admin' src='./img/admin.png' alt=''>";
             }
@@ -124,33 +136,37 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
                 }
             }
 
+
+
             //thêm sản phẩm
-            if (isset($_REQUEST["btnAddProd"])) {
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                if (isset($_REQUEST["btnAddProd"])) {
 
-                $tenSP = $_REQUEST["tenSP"];
-                $slt = $_REQUEST["SLT"];
-                $moTa = $_REQUEST["moTa"];
-                $giaBan = $_REQUEST["giaBan"];
-                $giaNhap = $_REQUEST["giaNhap"];
-                $thuongHieu = $_REQUEST["thuongHieu"];
-                $hinhAnh = $_FILES["fileAnh"];
-                $hsd = $_REQUEST["HSD"];
-                $loaiSP = $_REQUEST["LoaiSP"];
-                $nhaCC = $_REQUEST["nhaCC"];
-                $cp = new CProduct();
-                $result = $cp->addProduct($tenSP, $slt, $moTa, $giaBan, $giaNhap, $thuongHieu, $hinhAnh, $hsd, $loaiSP, $nhaCC);
+                    $tenSP = $_REQUEST["tenSP"];
+                    $slt = $_REQUEST["SLT"];
+                    $moTa = $_REQUEST["moTa"];
+                    $giaBan = $_REQUEST["giaBan"];
+                    $giaNhap = $_REQUEST["giaNhap"];
+                    $thuongHieu = $_REQUEST["thuongHieu"];
+                    $hinhAnh = $_FILES["fileAnh"];
+                    $hsd = $_REQUEST["HSD"];
+                    $loaiSP = $_REQUEST["LoaiSP"];
+                    $nhaCC = $_REQUEST["nhaCC"];
+                    $cp = new CProduct();
+                    $result = $cp->addProduct($tenSP, $slt, $moTa, $giaBan, $giaNhap, $thuongHieu, $hinhAnh, $hsd, $loaiSP, $nhaCC);
 
-                if ($result == 1) {
-                    echo "<script>alert('Add product successfully!')</script>";
-                    // echo header("refresh: 0; url = 'indexAdmin.php?san-pham'");
-                } elseif ($result == 0) {
-                    echo "<script>alert('Add product unsuccessfully!')</script>";
-                } elseif ($result == -1) {
-                    echo "<script>alert('This file is not image format!')</script>";
-                } elseif ($result == -2) {
-                    echo "<script>alert('This file is too lagre to upload!')</script>";
-                } else {
-                    echo "<script>alert('Can not upload file!')</script>";
+                    if ($result == 1) {
+                        echo "<script>alert('Add product successfully!')</script>";
+                        // echo header("refresh: 0; url = 'indexAdmin.php?san-pham'");
+                    } elseif ($result == 0) {
+                        echo "<script>alert('Add product unsuccessfully!')</script>";
+                    } elseif ($result == -1) {
+                        echo "<script>alert('This file is not image format!')</script>";
+                    } elseif ($result == -2) {
+                        echo "<script>alert('This file is too lagre to upload!')</script>";
+                    } else {
+                        echo "<script>alert('Can not upload file!')</script>";
+                    }
                 }
             }
             ?>
@@ -167,41 +183,41 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
                     <h5 class="modal-title">THÔNG TIN SẢN PHẨM</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="#" method="post" enctype="multipart/form-data">
+                <form action="#" method="post" enctype="multipart/form-data" onsubmit="return validateFormSP();">
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="">Tên sản phẩm</label>
-                            <input type="text" name="tenSP" id="tenSP" class="form-control" aria-describedby="tenSP-messs" onblur="test('#tenSP', kttenSP)">
+                            <input type="text" name="tenSP" id="tenSP" class="form-control" aria-describedby="tenSP-messs">
                             <small id="tenSP-mess"></small>
                         </div>
 
                         <div class="form-group">
                             <label for="">Số lượng tồn</label>
-                            <input type="number" name="SLT" id="SLT" class="form-control" aria-describedby="SLT-messs" onblur="test('#SLT', ktEmail)">
+                            <input type="number" name="SLT" id="SLT" class="form-control" aria-describedby="SLT-messs">
                             <small id="SLT-mess"></small>
                         </div>
 
                         <div class="form-group">
                             <label for="">Mô tả</label>
-                            <input type="text" name="moTa" id="moTa" class="form-control" aria-describedby="moTa-messs" onblur="test('#moTa', ktSDT)">
+                            <input type="text" name="moTa" id="moTa" class="form-control" aria-describedby="moTa-messs">
                             <small id="moTa-mess"></small>
                         </div>
 
                         <div class="form-group">
                             <label for="">Giá bán</label>
-                            <input type="double" name="giaBan" id="giaBan" class="form-control" aria-describedby="giaBan-messs" onblur="test('#giaBan', ktQueQuan)">
+                            <input type="number" name="giaBan" id="giaBan" class="form-control" aria-describedby="giaBan-messs">
                             <small id="giaBan-mess"></small>
                         </div>
 
                         <div class="form-group">
                             <label for="">Giá nhập</label>
-                            <input type="double" name="giaNhap" id="giaNhap" class="form-control" aria-describedby="giaNhap-messs" onblur="test('#giaNhap', ktQueQuan)">
+                            <input type="number" name="giaNhap" id="giaNhap" class="form-control" aria-describedby="giaNhap-messs">
                             <small id="giaNhap-mess"></small>
                         </div>
 
                         <div class="form-group">
                             <label for="">Thương hiệu</label>
-                            <input type="text" name="thuongHieu" id="thuongHieu" class="form-control" aria-describedby="thuongHieu-messs" onblur="test('#thuongHieu', ktSDT)">
+                            <input type="text" name="thuongHieu" id="thuongHieu" class="form-control" aria-describedby="thuongHieu-messs">
                             <small id="thuongHieu-mess"></small>
                         </div>
 
@@ -213,7 +229,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
 
                         <div class="form-group">
                             <label for="">Hạn sử dụng</label>
-                            <input type="date" name="HSD" id="HSD" class="form-control" aria-describedby="HSD-messs" onblur="test('#HSD', ktSDT)">
+                            <input type="date" name="HSD" id="HSD" class="form-control" aria-describedby="HSD-messs">
                             <small id="HSD-mess"></small>
                         </div>
 
@@ -267,6 +283,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
     </div>
 
 
+
+
     <!-- Modal Them Nhan Vien -->
     <div class="modal fade" id="modalThemNV" tabindex="-1" aria-labelledby="modalThemNVLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -275,35 +293,35 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
                     <h5 class="modal-title">THÔNG TIN NHÂN VIÊN</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="#" method="get" enctype="multipart/form-data">
+                <form action="#" method="get" enctype="multipart/form-data" onsubmit="return validateFormNV();">
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="">Họ và tên</label>
-                            <input type="text" name="hoTen" id="hoTen" class="form-control" aria-describedby="hoTen-messs" onblur="test('#hoTen', kthoTen)">
+                            <input type="text" name="hoTen" id="hoTen" class="form-control" aria-describedby="hoTen-messs">
                             <small id="hoTen-mess"></small>
                         </div>
 
                         <div class="form-group">
                             <label for="">Mật khẩu</label>
-                            <input type="text" name="matkhau" id="matkhau" class="form-control" aria-describedby="matkhau-messs" onblur="test('#matkhau', ktmatkhau)">
+                            <input type="text" name="matkhau" id="matkhau" class="form-control" aria-describedby="matkhau-messs">
                             <small id="matkhau-mess"></small>
                         </div>
 
                         <div class="form-group">
                             <label for="">Email</label>
-                            <input type="text" name="Email" id="Email" class="form-control" aria-describedby="Email-messs" onblur="test('#Email', ktEmail)">
+                            <input type="text" name="Email" id="Email" class="form-control" aria-describedby="Email-messs">
                             <small id="Email-mess"></small>
                         </div>
 
                         <div class="form-group">
                             <label for="">Số điện thoại</label>
-                            <input type="text" name="SDT" id="SDT" class="form-control" aria-describedby="SDT-messs" onblur="test('#SDT', ktSDT)">
+                            <input type="text" name="SDT" id="SDT" class="form-control" aria-describedby="SDT-messs">
                             <small id="SDT-mess"></small>
                         </div>
 
                         <div class="form-group">
                             <label for="">Địa chỉ</label>
-                            <input type="text" name="DiaChi" id="DiaChi" class="form-control" aria-describedby="DiaChi-messs" onblur="test('#DiaChi', ktDiaChi)">
+                            <input type="text" name="DiaChi" id="DiaChi" class="form-control" aria-describedby="DiaChi-messs">
                             <small id="DiaChi-mess"></small>
                         </div>
 
@@ -357,6 +375,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
         //     });
         // });
     </script>
+    <script src="./main.js"></script>
 </body>
 
 </html>

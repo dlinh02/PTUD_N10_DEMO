@@ -46,7 +46,7 @@
                          <input type="text" name="txtSearchNV" size="18" placeholder = "Search" value = "';
                          if(isset($_REQUEST["txtSearchNV"])) echo $_REQUEST["txtSearchNV"];
                          echo '" >
-                         <input type="submit" name="btnSearchNV" class="btnCus" value="Search"> 
+                         <input type="submit" name="btnSearchNV" class="btnCus btnCus5" value="Search"> 
                 </form>
             </div>
 
@@ -86,8 +86,14 @@
                             echo "<td>".$row["Email"]."</td>";
                             echo "<td>".$row["SoDienThoai"]."</td>";
                             echo "<td>".$row["DiaChi"]."</td>";
-                            echo "<td>".$row["LoaiNhanVien"]."</td>";
-                            echo "<td>
+                            echo "<td>";
+                            if ($row["LoaiNhanVien"] == 2) {
+                                echo "NV Kho";
+                            } else{
+                                echo "NV Bán Hàng";
+                                echo"</td>";
+                            }
+                            echo "<td style = 'display: flex; justify-content: center;'>
                             <form action='#' method='get'>
                                 <input type='hidden' name='MaNhanVien' value='" . $row["MaNhanVien"] . "'>
                                 <button class='btnCus btn2 edit' type='submit' value='edit' name= 'btnEmpAct'>
@@ -108,7 +114,7 @@
                     echo "</table>";
         }else{
             echo"Không tìm thấy nhân viên!";
-            // echo header("refresh: 5; url='indexAdmin.php?nhan-vien'");
+            header("refresh: 5; url='indexAdmin.php?nhan-vien'");
         }
     }
 }

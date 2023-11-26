@@ -942,7 +942,9 @@ ol {
 	font-size: 46px;
 	color: #ffffff;
 	font-weight: 700;
-	
+	background-color: pink;
+	margin-left: 400px;
+	margin-right: 400px;
 }
 
 .breadcrumb__option a {

@@ -1,5 +1,5 @@
 <?php
-    include_once("connectAdmin.php");
+    include_once("connect.php");
 
     class MLoaiSP {
         function selectAllLoaiSP() {

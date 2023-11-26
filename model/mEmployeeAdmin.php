@@ -1,5 +1,5 @@
 <?php
-    include_once("connectAdmin.php");
+    include_once("connect.php");
 
     class MEmployee {
         function selectAllEmployees() {
@@ -79,7 +79,6 @@
             if($p -> connect_DB($con)){
                 $str = "
                 INSERT INTO `nhanvien` (
-                    `MaNhanVien`, 
                     `HoTen`, 
                     `MatKhau`, 
                     `Email`, 
@@ -87,7 +86,7 @@
                     `DiaChi`, 
                     `LoaiNhanVien`, 
                     `trangThai`) 
-                    VALUES ('NULL', '$hoten', '$matkhau', '$email', '$sdt', '$diachi', '$loainv', '1');
+                    VALUES ('$hoten', '$matkhau', '$email', '$sdt', '$diachi', '$loainv', '1');
                 ";
                 echo"<script>alert('$str')</script>";
                 $tbl = mysqli_query($con, $str);

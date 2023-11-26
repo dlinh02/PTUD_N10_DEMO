@@ -38,7 +38,7 @@
                              <input type="text" name="txtSearchKH" size="18" placeholder = "Search" value = "';
                              if(isset($_REQUEST["txtSearchKH"])) echo $_REQUEST["txtSearchKH"];
                              echo '" >
-                             <input type="submit" name="btnSearchKH" class="btnCus" value="Search"> 
+                             <input type="submit" name="btnSearchKH" class="btnCus btnCus5" value="Search"> 
                     </form>
                 </div>
 
@@ -73,7 +73,7 @@
                             echo "<td>".$row["SoDienThoai"]."</td>";
                             echo "<td>".$row["DiaChi"]."</td>";
                             echo "<td>".$row["Email"]."</td>";
-                            echo "<td>
+                            echo "<td style = 'display: flex; justify-content: center;'>
                                     <form action='#' method='get' onsubmit='return confirmDelete();'>
                                         <input type='hidden' name='MaKhachHang' value='" . $row["MaKhachHang"] . "'>
                                         <button class='btnCus btn2 delete' type='submit' value='delete' name= 'btnCusAct'>

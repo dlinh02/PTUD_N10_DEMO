@@ -80,18 +80,13 @@ class MPay
             return false;
         }
     }
-    function createOrder($tongTienDonHang, $maKhachHang, $DiaChi, $HoTen, $SoDienThoai, $Email)
+    function createOrder($tongTienDonHang)
     {
         $p = new ConnectDB();
         $con = null;
 
         if ($p->connect_DB($con)) {
-
-            // $str_hoadon2 = "INSERT INTO hoadon (TongTien, NgayLap) VALUES ('$tongTienDonHang', NOW())";
-            $str_hoadon = "INSERT INTO `hoadon` 
-            (`MaHoaDon`, `TongTien`, `NgayLap`, `MaKhachHang`, `DiaChiGiaoHang`, `Họ Tên`, `SoDienThoai`, `Email`) 
-            VALUES (NULL, $tongTienDonHang, NOW(), $maKhachHang, '$DiaChi', '$HoTen', $SoDienThoai, '$Email');";
-
+            $str_hoadon = "INSERT INTO hoadon (TongTien, NgayLap) VALUES ('$tongTienDonHang', NOW())";
             mysqli_query($con, $str_hoadon);
             return mysqli_insert_id($con);
         } else {
@@ -99,16 +94,34 @@ class MPay
         }
     }
 
-    function createDetailsOrder($tongTien, $maSanPham, $soLuong, $MaHoaDon)
-    {
+    function createDetailsOrder(
+        $HoTen,
+        $SoDienThoai,
+        $Email,
+        $DiaChi,
+        $tongTien,
+        $maSanPham,
+        $maNhanVien,
+        $maKhachHang,
+        $soLuong,
+        $MaHoaDon
+    ) {
         $p = new ConnectDB();
         $con = null;
 
         if ($p->connect_DB($con)) {
-
-            $sql_detailsOrder = "INSERT INTO `chitiethoadon` (`MaChiTietHoaDon`, `TongTien`, `MaSanPham`, `MaHoaDon`, `SoLuong`) 
-            VALUES (NULL, '$tongTien', ' $maSanPham', '$MaHoaDon', '$soLuong');";
-
+            $sql_detailsOrder = "INSERT INTO `chitiethoadon` (`MaChiTietHoaDon`, `TongTien`, `NgayLapChiTietHoaDon`, `MaSanPham`, `MaHoaDon`, `SoLuong`, `MaKhachHang`, `DiaChiGiaoHang`, `HoTen`, `SoDienThoai`, `Email`) 
+                    VALUES (NULL, 
+                    '$tongTien', 
+                    NOW(), 
+                    '$maSanPham', 
+                    '$MaHoaDon', 
+                    '$soLuong', 
+                    '$maKhachHang', 
+                    '$DiaChi', 
+                    '$HoTen', 
+                    '$SoDienThoai', 
+                    '$Email');";
             $result_DetailsOrder = mysqli_query($con, $sql_detailsOrder);
             return $result_DetailsOrder;
         } else {
@@ -146,7 +159,6 @@ class MPay
             return false;
         }
     }
-
     function getQuantityProductsInStock($idProduct)
     {
         $p = new ConnectDB();

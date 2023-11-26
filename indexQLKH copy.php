@@ -9,31 +9,9 @@ if (!isset($_SESSION['LoaiNhanVien']) || empty($_SESSION['LoaiNhanVien'])) {
 
 if (isset($_GET['action']) && $_GET['action'] == 'logout') {
     session_unset();
-    session_destroy();
+    session_destroy(); 
     header('location: ./admin/login.php');
     exit();
-}
-
-// chuyển quyền truy cập admin
-if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
-} else {
-    $_SESSION['role'] = 'qlkh';
-}
-
-
-if (isset($_REQUEST['adminButton'])) {
-    if ($_SESSION['role'] !== 'admin') {
-        // Nếu không phải admin, chuyển hướng về trang không có quyền truy cập
-        echo ('<h4 style="text-align:center; padding-top:10px; color:red">Bạn không có quyền truy cập trang này!</h4>');
-        echo "<meta http-equiv='refresh' content='3;url='''>";
-        exit();
-    }
-
-    if ($_SESSION['role'] === 'admin') {
-        // Nếu là admin, chuyển hướng đến trang admin
-        header('Location: indexAdmin.php');
-        exit();
-    }
 }
 ?>
 <!DOCTYPE html>
@@ -60,17 +38,14 @@ if (isset($_REQUEST['adminButton'])) {
         <div class="row">
             <div class="col-md-12 header">
                 <a class="navbar-brand" href="#"><i class="fa fa-user-circle" aria-hidden="true"></i> NHÂN VIÊN QUẢN LÝ KHO</a>
-                <form action="" method="post" id= "formAdmin">
-                    <button type="submit" name="adminButton" id="adminButton" >Admin</button>
-                    <a href="?action=logout" data-toggle="tooltip" data-placement="bottom" title="ĐĂNG XUẤT"><b>Đăng xuất <i class="fas fa-sign-out-alt"></i></b></a>
-                </form>
+                <a href="?action=logout" data-toggle="tooltip" data-placement="bottom" title="ĐĂNG XUẤT"><b>Đăng xuất <i class="fas fa-sign-out-alt"></i></b></a>
             </div>
         </div>
     </div>
     <div class="container mt-3 body">
         <br>
         <!-- Nav tabs -->
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs" >
             <li class="nav-item">
                 <a class="nav-link active" href="indexQLKH.php?kiem-ke-kho">KIỂM KÊ KHO</a>
             </li>
@@ -88,66 +63,66 @@ if (isset($_REQUEST['adminButton'])) {
         <!-- Tab panes -->
         <div class="tab-content">
 
-            <?php
-            include_once("view/vKiemKeKho.php");
-            $p = new VPhieuKiemTraKho();
+                <?php
+                include_once("view/vKiemKeKho.php");
+                $p = new VPhieuKiemTraKho();
 
-            include_once("view/vProduct3.php");
-            $c = new VProduct();
+                include_once("view/vProduct3.php");
+                $c = new VProduct();
 
-            include_once("view/vPhieuNhapKho.php");
-            $d = new VPhieuNhapKho();
+                include_once("view/vPhieuNhapKho.php");
+                $d = new VPhieuNhapKho();
 
-            include_once("view/vPhieuXuatKho.php");
-            $e = new VPhieuXuatKho();
+                include_once("view/vPhieuXuatKho.php");
+                $e = new VPhieuXuatKho();
 
-            if (isset($_REQUEST['kiem-ke-kho'])) {
-                $p->viewAllPhieuKiemTraKho();
-            } elseif (isset($_REQUEST['san-pham'])) {
-                $c->viewAllProducts();
-            } elseif (isset($_REQUEST['phieu-nhap-kho'])) {
-                $d->viewAllPhieuNhapKho();
-            } elseif (isset($_REQUEST['phieu-xuat-kho'])) {
-                $e->viewAllPhieuXuatKho();
-            } elseif (isset($_REQUEST['btnSearchPKTK'])) {
-                $p->viewAllPhieuKiemTraKhoBySearch($_REQUEST['txtSearchPKTK']);
-            } elseif (isset($_REQUEST['btnSearchSP'])) {
-                $c->viewAllProductBySearch($_REQUEST['txtSearchSP']);
-            } elseif (isset($_REQUEST['btnSearchPNK'])) {
-                $d->viewAllPhieuNhapKhoBySearch($_REQUEST['txtSearchPNK']);
-            } elseif (isset($_REQUEST['btnSearchPXK'])) {
-                $e->viewAllPhieuXuatKhoBySearch($_REQUEST['txtSearchPXK']);
+                if(isset($_REQUEST['kiem-ke-kho']) ){
+                    $p->viewAllPhieuKiemTraKho();
+                }elseif(isset($_REQUEST['san-pham'])){
+                    $c->viewAllProducts();
+                }elseif(isset($_REQUEST['phieu-nhap-kho'])){
+                    $d->viewAllPhieuNhapKho();
+                }elseif(isset($_REQUEST['phieu-xuat-kho'])){
+                        $e->viewAllPhieuXuatKho();    
+                }elseif( isset($_REQUEST['btnSearchPKTK'] )){
+                    $p->viewAllPhieuKiemTraKhoBySearch($_REQUEST['txtSearchPKTK']);
+                }elseif(isset($_REQUEST['btnSearchSP'])){
+                    $c->viewAllProductBySearch($_REQUEST['txtSearchSP']);
+                }elseif(isset($_REQUEST['btnSearchPNK'])){
+                    $d->viewAllPhieuNhapKhoBySearch($_REQUEST['txtSearchPNK']);
+                }elseif(isset($_REQUEST['btnSearchPXK'])){
+                    $e->viewAllPhieuXuatKhoBySearch($_REQUEST['txtSearchPXK']);
                 // } elseif (isset($_REQUEST["btnSubmitActionPhieuKiemTraKho"])) {
                 //     $p->showFormDelPhieuKiemTraKho();
                 //     $p -> showFormEditPhieuKiemTraKho();
-            } elseif (isset($_REQUEST["btnSubmitActionPhieuXuatKho"])) {
-                $e->showFormDelPhieuXuatKho();
-                $e->showFormEditPhieuXuatKho();
-            } elseif (isset($_REQUEST["btnSubmitActionPhieuNhapKho"])) {
-                $d->showFormDelPhieuNhapKho();
-                $d->showFormEditPhieuNhapKho();
-            } elseif (isset($_REQUEST["btnProdAct"])) {
-                $c->showFormDelProduct();
-                $c->showFormEditProduct();
-            } elseif (isset($_REQUEST["btnSubmitActionPhieuKiemTraKho"])) {
-                $p->showFormDelPhieuKiemTraKho();
-                $p->showFormEditPhieuKiemTraKho();
-                // $p -> showFormEditPhieuKiemTraKho();
+                }elseif(isset($_REQUEST["btnSubmitActionPhieuXuatKho"])){
+                    $e->showFormDelPhieuXuatKho();
+                    $e->showFormEditPhieuXuatKho();
+                }elseif(isset($_REQUEST["btnSubmitActionPhieuNhapKho"])){
+                    $d->showFormDelPhieuNhapKho();
+                    $d->showFormEditPhieuNhapKho();
+                } elseif (isset($_REQUEST["btnProdAct"])) {
+                    $c->showFormDelProduct();
+                    $c->showFormEditProduct();
+                }elseif(isset($_REQUEST["btnSubmitActionPhieuKiemTraKho"])){
+                    $p->showFormDelPhieuKiemTraKho();
+                    $p -> showFormEditPhieuKiemTraKho();
+                    // $p -> showFormEditPhieuKiemTraKho();
                 // }elseif(isset($_REQUEST["btnCusAct"])){
                 //     $d -> showFormDelCustomer();
-            } else {
-                echo "welcom admin";
-            }
+                }else{
+                    echo "welcom admin";
+                }
 
-            //thêm PKTK
-            if (isset($_REQUEST["btnAddPKTK"])) {
+                //thêm PKTK
+            if(isset($_REQUEST["btnAddPKTK"])){
                 $NgayKiemTra = $_REQUEST["NKT"];
                 $TrangThaiKiemTra = $_REQUEST["TTKT"];
                 $MaNhanVien = $_REQUEST["MNVQLK"];
                 $MaSanPham = $_REQUEST["MSP"];
                 $p = new controlPhieuKiemTraKho();
-                $result = $p->addPhieuKiemTraKho($NgayKiemTra, $TrangThaiKiemTra, $MaNhanVien, $MaSanPham);
-
+                $result = $p -> addPhieuKiemTraKho($NgayKiemTra, $TrangThaiKiemTra, $MaNhanVien, $MaSanPham);
+    
                 if ($result == 1) {
                     echo "<script>alert('Add phieu kiem tra kho successfully!')</script>";
                     //echo header("refresh: 0; url = 'indexQLKH.php?kiem-ke-kho'");
@@ -155,7 +130,7 @@ if (isset($_REQUEST['adminButton'])) {
                     echo "<script>alert('Add phieu kiem tra kho unsuccessfully!')</script>";
                 }
             }
-            //thêm sản phẩm
+                //thêm sản phẩm
             if (isset($_REQUEST["btnAddProd"])) {
 
                 $tenSP = $_REQUEST["tenSP"];
@@ -180,18 +155,18 @@ if (isset($_REQUEST['adminButton'])) {
                     echo "<script>alert('This file is not image format!')</script>";
                 } elseif ($result == -2) {
                     echo "<script>alert('This file is too lagre to upload!')</script>";
-                } else {
+                } else{
                     echo "<script>alert('Can not upload file!')</script>";
                 }
             }
-            //thêm PNK
-            if (isset($_REQUEST["btnAddPNK"])) {
+              //thêm PNK
+              if(isset($_REQUEST["btnAddPNK"])){
                 $NgayLapPhieuNhapKho = $_REQUEST["NLPNK"];
                 $TrangThaiPhieuNhapKho = $_REQUEST["TTPN"];
                 $MaNhanVien = $_REQUEST["MNVK"];
                 $MaSanPham = $_REQUEST["MSP"];
                 $dp = new controlPhieuNhapKho();
-                $result = $dp->addPhieuNhapKho($NgayLapPhieuNhapKho, $TrangThaiPhieuNhapKho, $MaNhanVien, $MaSanPham);
+                $result = $dp -> addPhieuNhapKho($NgayLapPhieuNhapKho, $TrangThaiPhieuNhapKho, $MaNhanVien, $MaSanPham);
 
                 if ($result == 1) {
                     echo "<script>alert('Add phieu nhap kho successfully!')</script>";
@@ -201,14 +176,14 @@ if (isset($_REQUEST['adminButton'])) {
                 }
             }
 
-            //thêm PXK
-            if (isset($_REQUEST["btnAddPXK"])) {
+             //thêm PXK
+             if(isset($_REQUEST["btnAddPXK"])){
                 $NgayLapPhieuXuatKho = $_REQUEST["NLPXK"];
                 $TrangThaiPhieuXuatKho = $_REQUEST["TTPX"];
                 $MaNhanVien = $_REQUEST["MNVK"];
                 $MaSanPham = $_REQUEST["MSP"];
                 $ep = new controlPhieuXuatKho();
-                $result = $ep->addPhieuXuatKho($NgayLapPhieuXuatKho, $TrangThaiPhieuXuatKho, $MaNhanVien, $MaSanPham);
+                $result = $ep -> addPhieuXuatKho($NgayLapPhieuXuatKho,$TrangThaiPhieuXuatKho, $MaNhanVien, $MaSanPham);
 
                 if ($result == 1) {
                     echo "<script>alert('Add phieu xuat kho successfully!')</script>";
@@ -221,19 +196,19 @@ if (isset($_REQUEST['adminButton'])) {
         </div>
 
     </div>
-
-    <!-- Modal Them phiếu kiểm tra kho -->
+    
+     <!-- Modal Them phiếu kiểm tra kho -->
     <div class="modal fade" id="ModalPKTK" tabindex="-1" aria-labelledby="modalPKTKLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <h4 class="modal-title">Thêm phiếu kiểm tra kho</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                         <!-- Modal Header -->
+                         <div class="modal-header">
+                                        <h4 class="modal-title">Thêm phiếu kiểm tra kho</h4>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
 
-                <!-- Modal body -->
-                <form action="#" method="post" enctype="multipart/form-data">
+                                    <!-- Modal body -->
+                                    <form action="#" method="post" enctype="multipart/form-data">
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="">Ngày kiểm tra</label>
@@ -259,23 +234,23 @@ if (isset($_REQUEST['adminButton'])) {
                             <small id="MSP-mess"></small>
                         </div>
                     </div>
+                                    
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer">
+                                        <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ</button>
+                                        <button type="submit" name="btnAddPKTK" class="btn btn-success">Lưu</button>
+                                    </div>
+                                    
+                                </div>
+                                    </form>
+                                </div>
+                                </div>
+                                  
+                </div>
 
-                    <!-- Modal footer -->
-                    <div class="modal-footer">
-                        <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ</button>
-                        <button type="submit" name="btnAddPKTK" class="btn btn-success">Lưu</button>
-                    </div>
-
-            </div>
-            </form>
-        </div>
-    </div>
-
-    </div>
-
-
-
-    <!-- Modal Them san pham -->
+    
+       
+           <!-- Modal Them san pham -->
     <div class="modal fade" id="modalThemSP" tabindex="-1" aria-labelledby="modalThemSPLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -382,121 +357,136 @@ if (isset($_REQUEST['adminButton'])) {
         </div>
     </div>
 
+           
+            <!-- Modal Phiếu nhập kho  -->
+            <div class="modal fade" id="ModalPNK" tabindex="-1" aria-labelledby="modalPNKLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
 
-    <!-- Modal Phiếu nhập kho  -->
-    <div class="modal fade" id="ModalPNK" tabindex="-1" aria-labelledby="modalPNKLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Thêm phiếu nhập kho</h4>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
 
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <h4 class="modal-title">Thêm phiếu nhập kho</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    <!-- Modal body -->
+                                     <form action="#" method="post" enctype="multipart/form-data">
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                        <label for="">Ngày Lập Phiếu Nhập Kho</label>
+                                        <input type="date" name="NLPNK" id="NLPNK" class="form-control"
+                                            placeholder="vi du: 20/11/2023" aria-describedby="NLPNK-mess"
+                                            onblur="test('#NLPNK', NLPNK)">
+                                        <small id="NLPNK-mess"></small>
+                                    </div>
+                                    <div class="form-group">
+                                            <label for="">Trạng thái phiếu nhập kho</label>
+                                            <input type="text" name="TTPN" id="TTPN" class="form-control"
+                                                placeholder="vi du: sản phẩm không hư hỏng" aria-describedby="TTPN-messs"
+                                                onblur="test('#TTPN', ktTTPN)">
+                                            <small id="TTPN-mess"></small>
+                                        </div>
+                                        <div class="form-group">
+                                    <div class="form-group">
+                                    <label for="">Mã nhân viên kiểm tra kho</label>
+                                        <input type="text" name="MNVK" id="MNVK" class="form-control"
+                                            placeholder="" aria-describedby="MNVK-messs"
+                                            onblur="test('#MNVK', ktMNVK)">
+                                        <small id="MNVK-mess"></small>
+                                    </div>  <label for="">Mã Sản Phẩm</label>
+                                        <input type="text" name="MSP" id="MSP" class="form-control"
+                                            placeholder="" aria-describedby="MSP-messs"
+                                            onblur="test('#MSP', ktMSP)">
+                                        <small id="MSP-mess"></small>
+                                    </div>
+                                    
+                                    </div>
+                                    
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer">
+                                        <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ</button>
+                                        <button type="submit" name="btnAddPNK" class="btn btn-success">Lưu</button>
+                                    </div>
+
+                                    </div>
+                                    </form>
+                                </div>
+                                </div>
+                                  
                 </div>
-
-                <!-- Modal body -->
-                <form action="#" method="post" enctype="multipart/form-data">
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="">Ngày Lập Phiếu Nhập Kho</label>
-                            <input type="date" name="NLPNK" id="NLPNK" class="form-control" placeholder="vi du: 20/11/2023" aria-describedby="NLPNK-mess" onblur="test('#NLPNK', NLPNK)">
-                            <small id="NLPNK-mess"></small>
-                        </div>
-                        <div class="form-group">
-                            <label for="">Trạng thái phiếu nhập kho</label>
-                            <input type="text" name="TTPN" id="TTPN" class="form-control" placeholder="vi du: sản phẩm không hư hỏng" aria-describedby="TTPN-messs" onblur="test('#TTPN', ktTTPN)">
-                            <small id="TTPN-mess"></small>
-                        </div>
-                        <div class="form-group">
-                            <div class="form-group">
-                                <label for="">Mã nhân viên kiểm tra kho</label>
-                                <input type="text" name="MNVK" id="MNVK" class="form-control" placeholder="" aria-describedby="MNVK-messs" onblur="test('#MNVK', ktMNVK)">
-                                <small id="MNVK-mess"></small>
-                            </div> <label for="">Mã Sản Phẩm</label>
-                            <input type="text" name="MSP" id="MSP" class="form-control" placeholder="" aria-describedby="MSP-messs" onblur="test('#MSP', ktMSP)">
-                            <small id="MSP-mess"></small>
-                        </div>
-
-                    </div>
-
-                    <!-- Modal footer -->
-                    <div class="modal-footer">
-                        <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ</button>
-                        <button type="submit" name="btnAddPNK" class="btn btn-success">Lưu</button>
-                    </div>
-
+             
+   
             </div>
-            </form>
-        </div>
-    </div>
+            
+  <!-- Modal Phiếu xuất kho  -->
+            <div class="modal fade" id="ModalPXK" tabindex="-1" aria-labelledby="modalPXKLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
 
-    </div>
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Thêm phiếu xuất kho</h4>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
 
+                                    <!-- Modal body -->
+                                    <form action="#" method="post" enctype="multipart/form-data">
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                        <label for="">Ngày Lập Phiếu Xuất Kho</label>
+                                        <input type="date" name="NLPXK" id="NLPXK" class="form-control"
+                                            placeholder="vi du: 20/11/2023" aria-describedby="NLPXK-mess"
+                                            onblur="test('#NLPXK', NLPNK)">
+                                        <small id="NLPXK-mess"></small>
+                                    </div>
+                                        <div class="form-group">
+                                            <label for="">Trạng Thái Phiếu Xuất Kho</label>
+                                            <input type="text" name="TTPX" id="TTPX" class="form-control"
+                                                placeholder="" aria-describedby="TTPX-messs"
+                                                onblur="test('#TTPX', ktTTPX)">
+                                            <small id="TTPX-mess"></small>
+                                        </div>
 
-    </div>
+                                    <div class="form-group">
+                                    <label for="">Mã nhân viên kiểm tra kho</label>
+                                        <input type="text" name="MNVK" id="MNVK" class="form-control"
+                                            placeholder="" aria-describedby="MNVK-messs"
+                                            onblur="test('#MNVK', ktMNVK)">
+                                        <small id="MNVK-mess"></small>
+                                    </div>
+                                    <div class="form-group">
+                                    <label for="">Mã Sản Phẩm</label>
+                                        <input type="text" name="MSP" id="MSP" class="form-control"
+                                            placeholder="" aria-describedby="MSP-messs"
+                                            onblur="test('#MSP', ktMSP)">
+                                        <small id="MSP-mess"></small>
+                                    </div>
+                                            
+                                    </div>
 
-    <!-- Modal Phiếu xuất kho  -->
-    <div class="modal fade" id="ModalPXK" tabindex="-1" aria-labelledby="modalPXKLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer">
+                                    <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ</button>
+                                        <button type="submit" name="btnAddPXK" class="btn btn-success">Lưu</button>
+</div>
 
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <h4 class="modal-title">Thêm phiếu xuất kho</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    </form>
+                                </div>
+                                </div>
+                                  
                 </div>
-
-                <!-- Modal body -->
-                <form action="#" method="post" enctype="multipart/form-data">
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="">Ngày Lập Phiếu Xuất Kho</label>
-                            <input type="date" name="NLPXK" id="NLPXK" class="form-control" placeholder="vi du: 20/11/2023" aria-describedby="NLPXK-mess" onblur="test('#NLPXK', NLPNK)">
-                            <small id="NLPXK-mess"></small>
-                        </div>
-                        <div class="form-group">
-                            <label for="">Trạng Thái Phiếu Xuất Kho</label>
-                            <input type="text" name="TTPX" id="TTPX" class="form-control" placeholder="" aria-describedby="TTPX-messs" onblur="test('#TTPX', ktTTPX)">
-                            <small id="TTPX-mess"></small>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="">Mã nhân viên kiểm tra kho</label>
-                            <input type="text" name="MNVK" id="MNVK" class="form-control" placeholder="" aria-describedby="MNVK-messs" onblur="test('#MNVK', ktMNVK)">
-                            <small id="MNVK-mess"></small>
-                        </div>
-                        <div class="form-group">
-                            <label for="">Mã Sản Phẩm</label>
-                            <input type="text" name="MSP" id="MSP" class="form-control" placeholder="" aria-describedby="MSP-messs" onblur="test('#MSP', ktMSP)">
-                            <small id="MSP-mess"></small>
-                        </div>
-
-                    </div>
-
-                    <!-- Modal footer -->
-                    <div class="modal-footer">
-                        <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ</button>
-                        <button type="submit" name="btnAddPXK" class="btn btn-success">Lưu</button>
-                    </div>
-
-            </div>
-            </form>
+            
+        
+                </tbody>
+            </table>
         </div>
-    </div>
-
-    </div>
-
-
-    </tbody>
-    </table>
-    </div>
     </div>
     <script>
         function confirmDelete() {
             return confirm("Bạn có chắc chắn muốn xóa không?");
         }
     </script>
-
 
 </body>
 

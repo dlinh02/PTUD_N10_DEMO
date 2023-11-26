@@ -90,3 +90,28 @@ form > button.btnCus.btn2.delete{
     margin: 50px 150px;
     box-shadow: 4px 4px 4px 4px #ccc
 }
+
+.btnCus{
+    background-color: #198754;
+    /* color: #fff; */
+    border: none;
+    border-radius: 3px;
+    padding:3px 7px
+}
+
+.btnCus5{
+    color: #fff;
+}
+
+#adminButton{
+    border: none; 
+    background-color: #198754; 
+    color: #fff; 
+    padding: 5px 20px; 
+    margin-top: 10px; 
+    border-radius: 3px;
+}
+
+#formAdmin{
+
+}

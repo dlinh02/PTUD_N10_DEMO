@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th10 26, 2023 lúc 07:32 AM
+-- Thời gian đã tạo: Th10 23, 2023 lúc 03:15 PM
 -- Phiên bản máy phục vụ: 10.4.27-MariaDB
 -- Phiên bản PHP: 8.2.0
 
@@ -12,7 +12,7 @@ START TRANSACTION;
 SET time_zone = "+00:00";
 
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARAaCTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
@@ -30,18 +30,24 @@ SET time_zone = "+00:00";
 CREATE TABLE `chitiethoadon` (
   `MaChiTietHoaDon` int(11) NOT NULL,
   `TongTien` double NOT NULL,
+  `NgayLapChiTietHoaDon` date NOT NULL,
   `MaSanPham` int(11) NOT NULL,
   `MaHoaDon` int(11) NOT NULL,
-  `SoLuong` int(11) NOT NULL
+  `SoLuong` int(11) NOT NULL,
+  `MaKhachHang` int(11) DEFAULT NULL,
+  `DiaChiGiaoHang` varchar(100) NOT NULL,
+  `HoTen` varchar(100) NOT NULL,
+  `SoDienThoai` int(11) NOT NULL,
+  `Email` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `chitiethoadon`
 --
 
-INSERT INTO `chitiethoadon` (`MaChiTietHoaDon`, `TongTien`, `MaSanPham`, `MaHoaDon`, `SoLuong`) VALUES
-(108, 358000, 1, 2, 1),
-(109, 297000, 2, 3, 1);
+INSERT INTO `chitiethoadon` (`MaChiTietHoaDon`, `TongTien`, `NgayLapChiTietHoaDon`, `MaSanPham`, `MaHoaDon`, `SoLuong`, `MaKhachHang`, `DiaChiGiaoHang`, `HoTen`, `SoDienThoai`, `Email`) VALUES
+(102, 179000, '2023-11-23', 1, 199, 1, 1, '12, Nguyễn Văn Bảo', 'Nguyễn Văn Qúy', 816977959, 'myphamdep@gmail.com'),
+(103, 693000, '2023-11-23', 2, 199, 7, 1, '12, Nguyễn Văn Bảo', 'Nguyễn Văn Qúy', 816977959, 'myphamdep@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -76,21 +82,15 @@ INSERT INTO `giohang` (`MaGioHang`, `SoLuong`, `MaKhachHang`, `MaSanPham`) VALUE
 CREATE TABLE `hoadon` (
   `MaHoaDon` int(11) NOT NULL,
   `TongTien` double NOT NULL,
-  `NgayLap` date NOT NULL,
-  `MaNhanVien` int(11) DEFAULT NULL,
-  `MaKhachHang` int(11) NOT NULL,
-  `DiaChiGiaoHang` varchar(100) CHARACTER SET utf16 COLLATE utf16_general_ci NOT NULL,
-  `Họ Tên` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `SoDienThoai` int(11) NOT NULL,
-  `Email` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL
+  `NgayLap` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `hoadon`
 --
 
-INSERT INTO `hoadon` (`MaHoaDon`, `TongTien`, `NgayLap`, `MaNhanVien`, `MaKhachHang`, `DiaChiGiaoHang`, `Họ Tên`, `SoDienThoai`, `Email`) VALUES
-(203, 655000, '2023-11-26', NULL, 1, '12, Nguyễn Văn Bảo', 'Nguyễn Văn Qúy', 816977959, 'myphamdep@gmail.com');
+INSERT INTO `hoadon` (`MaHoaDon`, `TongTien`, `NgayLap`) VALUES
+(199, 872000, '2023-11-23');
 
 -- --------------------------------------------------------
 
@@ -401,8 +401,8 @@ CREATE TABLE `sanpham` (
 --
 
 INSERT INTO `sanpham` (`MaSanPham`, `TenSanPham`, `SoLuongTon`, `MoTa`, `GiaBan`, `GiaNhap`, `ThuongHieu`, `HinhAnh`, `HanSuDung`, `LoaiSanPham`, `NhaCungCap`, `trangThai`) VALUES
-(1, 'Mascara touching', 0, 'Kem nền dạng lỏng che khuyết điểm', 179000, 79000, 'Becca', 'a1.jpg', '2024-10-23', 1, 1, 1),
-(2, 'Phấn phủ gramy', 944, 'Mascara làm cong mi mắt', 99000, 39000, 'GECOMO', 'a2.jpg', '2025-10-15', 2, 2, 1),
+(1, 'Mascara touching', 4, 'Kem nền dạng lỏng che khuyết điểm', 179000, 79000, 'Becca', 'a1.jpg', '2024-10-23', 1, 1, 1),
+(2, 'Phấn phủ gramy', 949, 'Mascara làm cong mi mắt', 99000, 39000, 'GECOMO', 'a2.jpg', '2025-10-15', 2, 2, 1),
 (3, 'Phấn phủ Pramy', 578, 'Phấn phủ làm mịn da', 490000, 290000, 'PRAMY', 'a3.jpg', '2025-10-01', 3, 3, 0),
 (4, 'sữa rửa mặt simple', 98, 'sữa rửa mặt simple', 460000, 400000, 'Melody', 'a4.jpg', '2025-11-13', 4, 4, 1),
 (5, 'Sữa rửa mặt lahabo', 10, 'Sữa rửa mặt sáng dae', 100000, 90000, 'Simple', 'a5.jpg', '2023-11-29', 5, 5, 1),
@@ -518,19 +518,19 @@ ALTER TABLE `sanpham`
 -- AUTO_INCREMENT cho bảng `chitiethoadon`
 --
 ALTER TABLE `chitiethoadon`
-  MODIFY `MaChiTietHoaDon` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
+  MODIFY `MaChiTietHoaDon` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
 
 --
 -- AUTO_INCREMENT cho bảng `giohang`
 --
 ALTER TABLE `giohang`
-  MODIFY `MaGioHang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
+  MODIFY `MaGioHang` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
 
 --
 -- AUTO_INCREMENT cho bảng `hoadon`
 --
 ALTER TABLE `hoadon`
-  MODIFY `MaHoaDon` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=204;
+  MODIFY `MaHoaDon` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=200;
 
 --
 -- AUTO_INCREMENT cho bảng `khachhang`

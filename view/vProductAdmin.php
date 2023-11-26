@@ -1,22 +1,22 @@
 <?php
     include_once("controller/cProductAdmin.php");
-    class VProduct{
+    class VProductAdmin{
         function viewAllProducts(){
-            $p = new CProduct();
+            $p = new CProductAdmin();
             $tbl = $p -> getAllProducts();
-            showProduct($tbl);
+            showProductAdmin($tbl);
         }
 
         function viewAllProductBySearch($search){
-            $p = new CProduct();
+            $p = new CProductAdmin();
             if(isset($_REQUEST['txtSearchSP'])){
                 $tbl = $p -> getAllProductBySearch($search);
             }
-            showProduct($tbl);
+            showProductAdmin($tbl);
         }
 
         function showFormDelProduct(){
-            $p = new CProduct();
+            $p = new CProductAdmin();
                 if(isset($_REQUEST["btnProdAct"])){
                     if ($_REQUEST["btnProdAct"] == "delete"){
                         $result = $p -> getDelProduct($_REQUEST["MaSanPham"]);
@@ -27,7 +27,7 @@
         }
 
         function showFormEditProduct(){
-            $p = new CProduct();
+            $p = new CProductAdmin();
             if(isset($_REQUEST["btnProdAct"])){
                 if ($_REQUEST["btnProdAct"] == "edit"){
                     include("editProductAdmin.php");
@@ -37,7 +37,7 @@
         }
     }
 
-    function showProduct($tbl){
+    function showProductAdmin($tbl){
         if($tbl){
             if(mysqli_num_rows($tbl) >0){
                 $dem=0;
@@ -45,11 +45,11 @@
                 <div id="san-pham" class="container tab-pane active"><br>
                 <div class="row timKiem-them">
                     <div class="timKiem input-group mb-3 col-md-5">
-                        <form action="indexAdmin.php" method="get">
+                        <form action="#" method="get">
                                  <input type="text" name="txtSearchSP" size="18" placeholder = "Search" value = "';
                                  if(isset($_REQUEST["txtSearchSP"])) echo $_REQUEST["txtSearchSP"];
                                  echo '" >
-                                 <input type="submit" name="btnSearchSP" class="btnCus" value="Search"> 
+                                 <input type="submit" name="btnSearchSP" class="btnCus btnCus5" value="Search"> 
                         </form>
                     </div>
 
@@ -94,11 +94,41 @@
                             echo "<td>".number_format($row["GiaBan"], 0,".", ".")."VNĐ</td>";
                             echo "<td>".number_format($row["GiaNhap"], 0,".", ".")."VNĐ</td>";
                             echo "<td>".$row["ThuongHieu"]."</td>";
-                            echo "<td>"."<img src='img/".$row["HinhAnh"]."' alt='".$row["HinhAnh"]."' width= '50px' height= '50px'>"."</td>";
+                            echo "<td>"."<img src='Image/".$row["HinhAnh"]."' alt='".$row["HinhAnh"]."' width= '50px' height= '50px'>"."</td>";
                             echo "<td>".date("d/m/Y", strtotime($row["HanSuDung"]))."</td>";
-                            echo "<td>".$row["LoaiSanPham"]."</td>";
-                            echo "<td>".$row["NhaCungCap"]."</td>";
-                            echo "<td>
+                            echo "<td>";
+                            if ($row["LoaiSanPham"] == 1) {
+                                echo "Kem nền";
+                            } elseif ($row["LoaiSanPham"] == 2) {
+                                echo "Mascara";
+                            } elseif ($row["LoaiSanPham"] == 3) {
+                                echo "Phấn phủ";
+                            } elseif ($row["LoaiSanPham"] == 4) {
+                                echo "Son môi";
+                            } elseif ($row["LoaiSanPham"] == 5) {
+                                echo "Sữa rửa mặt";
+                            } elseif ($row["LoaiSanPham"] == 6) {
+                                echo "KCN";
+                            } else{
+                                echo "Loại khác";
+                                echo"</td>";
+                            }
+                            echo "<td>";
+                            if ($row["NhaCungCap"] == 1) {
+                                echo "MQ SKIN";
+                            } elseif ($row["NhaCungCap"] == 2) {
+                                echo "Mascara";
+                            } elseif ($row["NhaCungCap"] == 3) {
+                                echo "Naunau";
+                            } elseif ($row["NhaCungCap"] == 4) {
+                                echo "Skina";
+                            } elseif ($row["NhaCungCap"] == 5) {
+                                echo "Titione";
+                            } else{
+                                echo "Khác";
+                                echo"</td>";
+                            }
+                            echo "<td style = 'display: flex; justify-content: center;  padding: 20px 0;'>
                                     <form action='#' method='get'>
                                         <input type='hidden' name='MaSanPham' value='" . $row["MaSanPham"] . "'>
                                         <button class='btnCus btn2 edit' type='submit' value='edit' name= 'btnProdAct'>
