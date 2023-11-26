@@ -110,8 +110,5 @@ form > button.btnCus.btn2.delete{
     padding: 5px 20px; 
     margin-top: 10px; 
     border-radius: 3px;
-}
-
-#formAdmin{
-
+    margin-right: 10px;
 }
